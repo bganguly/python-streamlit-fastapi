@@ -60,6 +60,32 @@ python -m streamlit run app/streamlit_app.py --server.port 8501
 
 Open: http://127.0.0.1:8501
 
+## Quick Verify
+
+1. Verify FastAPI is up:
+
+```bash
+curl -s http://127.0.0.1:3000/health
+```
+
+Expected:
+
+```json
+{"status":"ok"}
+```
+
+2. Verify data endpoint responds:
+
+```bash
+curl -s "http://127.0.0.1:3000/api/education-spending?year=2022&limit=3"
+```
+
+3. Verify Streamlit module is available in the active terminal:
+
+```bash
+python -m streamlit --version
+```
+
 ### Troubleshooting
 
 If you see `No module named streamlit`:
