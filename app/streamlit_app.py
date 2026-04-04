@@ -45,6 +45,6 @@ if load:
             st.warning("No data returned for the selected year.")
         else:
             st.success(f"Loaded {len(rows)} rows")
-            st.dataframe(rows, use_container_width=True)
+            st.dataframe(rows, width="stretch")
 else:
     st.info("Use the sidebar controls and click Load Data.")
