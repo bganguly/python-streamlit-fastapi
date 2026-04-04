@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EdTech Insights</title>
+    <style>
+      :root {
+        --bg-1: #f3efe6;
+        --bg-2: #dbe8f2;
+        --ink: #1a1e2b;
+        --accent: #0f766e;
+        --card: rgba(255, 255, 255, 0.8);
+      }
+
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        color: var(--ink);
+        min-height: 100vh;
+        background: radial-gradient(circle at 10% 10%, var(--bg-2), transparent 40%),
+          radial-gradient(circle at 85% 90%, #f6d6a8, transparent 35%),
+          linear-gradient(160deg, var(--bg-1), #f8f7f3);
+      }
+
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+      }
+
+      .sub {
+        margin: 0.6rem 0 1.6rem;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      input,
+      button {
+        font-size: 1rem;
+        padding: 0.55rem 0.75rem;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+      }
+
+      button {
+        background: var(--accent);
+        color: white;
+        border: 0;
+        cursor: pointer;
+      }
+
+      .panel {
+        margin-top: 1.2rem;
+        backdrop-filter: blur(4px);
+        background: var(--card);
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 0.65rem 0.75rem;
+        border-bottom: 1px solid #ececec;
+        text-align: left;
+      }
+
+      th {
+        background: #f8fafc;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 600px) {
+        th:nth-child(1),
+        td:nth-child(1) {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>EdTech Insights</h1>
+      <p class="sub">Public data from the World Bank: education spending as % of GDP.</p>
+      <div class="controls">
+        <label for="year">Year</label>
+        <input id="year" type="number" min="1960" max="2100" value="2022" />
+        <button id="load">Load Data</button>
+      </div>
+      <section class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Country</th>
+              <th>Code</th>
+              <th>Year</th>
+              <th>Education Spending % GDP</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script>
+      const rows = document.getElementById("rows");
+      const load = document.getElementById("load");
+      const year = document.getElementById("year");
+
+      async function loadData() {
+        rows.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
+        const response = await fetch(`/api/education-spending?year=${year.value}&limit=25`);
+        const payload = await response.json();
+
+        rows.innerHTML = "";
+        payload.data.forEach((item, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.country}</td>
+            <td>${item.country_code ?? "-"}</td>
+            <td>${item.year}</td>
+            <td>${Number(item.education_spending_pct_gdp).toFixed(2)}</td>
+          `;
+          rows.appendChild(tr);
+        });
+      }
+
+      load.addEventListener("click", loadData);
+      loadData();
+    </script>
+  </body>
+</html>
