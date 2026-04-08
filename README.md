@@ -1,4 +1,4 @@
-# Python FastAPI EdTech
+# Python Streamlit FastAPI
 
 Short FastAPI + UI project using publicly accessible education data from the World Bank.
 
